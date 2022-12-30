@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.notification_listener">
+    package="dev.salism3.notification_listener">
     <application
         android:label="Notification Listener"
         android:name="${applicationName}"

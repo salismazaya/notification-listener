@@ -1,4 +1,4 @@
-package com.example.notification_listener
+package dev.salism3.notification_listener
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity
