@@ -3,10 +3,22 @@
 import 'package:flutter/material.dart';
 import 'package:notifications/notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 import 'utils.dart';
 import 'dart:async';
+import 'dart:io';
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
+  }
+}
 
 void main() {
+  HttpOverrides.global = MyHttpOverrides();
   runApp(const MyApp());
 }
 
@@ -28,16 +40,26 @@ class _MyAppState extends State<MyApp> {
     return this.info.toString() == 'null';
   }
 
-  void onData(NotificationEvent event) {}
+  void onData(NotificationEvent event) async {
+    var payload = {
+      'message': event.message,
+      'title': event.title,
+      'packageName': event.packageName,
+      'timestamp': event.timeStamp.toString(),
+    };
+
+    try {
+      var uri = Uri.parse(await this.storage.read(key: "webhook_url") ?? '');
+      await http.post(uri, body: payload);
+    } catch (e) {}
+  }
 
   @override
   void initState() {
     _notifications = Notifications();
     try {
       _subscription = _notifications!.notificationStream!.listen(onData);
-    } on NotificationException catch (exception) {
-      print(exception);
-    }
+    } on NotificationException catch (exception) {}
 
     super.initState();
   }

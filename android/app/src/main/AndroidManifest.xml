@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.notification_listener">
     <application
-        android:label="notification_listener"
+        android:label="Notification Listener"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -45,4 +45,5 @@
             </intent-filter>
         </service>
     </application>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>
