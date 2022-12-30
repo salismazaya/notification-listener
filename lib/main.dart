@@ -1,24 +1,40 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_this
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, unnecessary_this, depend_on_referenced_packages, unused_import
 
 import 'package:flutter/material.dart';
 import 'package:notifications/notifications.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:http/http.dart' as http;
+import 'listener.dart';
+import 'storage.dart';
+
 import 'utils.dart';
 import 'dart:async';
-import 'dart:io';
 
-class MyHttpOverrides extends HttpOverrides {
-  @override
-  HttpClient createHttpClient(SecurityContext? context) {
-    return super.createHttpClient(context)
-      ..badCertificateCallback =
-          (X509Certificate cert, String host, int port) => true;
-  }
+// this will be used as notification channel id
+const notificationChannelId = 'salisganteng';
+
+// this will be used for notification id, So you can update your custom notification with this id.
+const notificationId = 888;
+
+Future<void> initializeService() async {
+  final service = FlutterBackgroundService();
+  await service.configure(
+    androidConfiguration: AndroidConfiguration(
+      onStart: onStart,
+      autoStart: true,
+      isForegroundMode: true,
+    ),
+    iosConfiguration: IosConfiguration(),
+  );
+  service.startService();
 }
 
-void main() {
-  HttpOverrides.global = MyHttpOverrides();
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeService();
+
   runApp(const MyApp());
 }
 
@@ -30,38 +46,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  Notifications? _notifications;
-  StreamSubscription<NotificationEvent>? _subscription;
-  final storage = FlutterSecureStorage();
+  final storage = getStorage();
   String? webhook_url;
   String? info;
 
   bool getInfoIsnull() {
     return this.info.toString() == 'null';
-  }
-
-  void onData(NotificationEvent event) async {
-    var payload = {
-      'message': event.message,
-      'title': event.title,
-      'packageName': event.packageName,
-      'timestamp': event.timeStamp.toString(),
-    };
-
-    try {
-      var uri = Uri.parse(await this.storage.read(key: "webhook_url") ?? '');
-      await http.post(uri, body: payload);
-    } catch (e) {}
-  }
-
-  @override
-  void initState() {
-    _notifications = Notifications();
-    try {
-      _subscription = _notifications!.notificationStream!.listen(onData);
-    } on NotificationException catch (exception) {}
-
-    super.initState();
   }
 
   @override

@@ -39,6 +39,7 @@ dependencies:
   notifications: ^2.0.1
   flutter_secure_storage: ^7.0.1
   http: ^0.13.5
+  flutter_background_service: ^2.4.6
 
 dev_dependencies:
   flutter_test:
