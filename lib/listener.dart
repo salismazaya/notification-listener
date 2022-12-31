@@ -4,11 +4,12 @@ import 'package:notifications/notifications.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:http/http.dart' as http;
-import 'storage.dart';
+import 'package:notification_listener/storage.dart';
 import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+@pragma('vm:entry-point')
 class MyHttpOverrides extends HttpOverrides {
   @override
   HttpClient createHttpClient(SecurityContext? context) {
@@ -20,6 +21,7 @@ class MyHttpOverrides extends HttpOverrides {
 
 MyHttpOverrides _httpOverrid = MyHttpOverrides();
 
+@pragma('vm:entry-point')
 void onData(NotificationEvent event) async {
   HttpOverrides.global = _httpOverrid;
   var storage = getStorage();
@@ -38,6 +40,7 @@ void onData(NotificationEvent event) async {
   } catch (e) {}
 }
 
+@pragma('vm:entry-point')
 Future<void> onStart(ServiceInstance service) async {
   Notifications? _notifications;
   StreamSubscription<NotificationEvent>? _subscription;

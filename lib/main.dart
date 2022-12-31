@@ -6,10 +6,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:http/http.dart' as http;
-import 'listener.dart';
-import 'storage.dart';
-
-import 'utils.dart';
+import 'package:notification_listener/listener.dart';
+import 'package:notification_listener/storage.dart';
+import 'package:notification_listener/utils.dart';
 import 'dart:async';
 
 // this will be used as notification channel id
@@ -115,6 +114,23 @@ class _MyAppState extends State<MyApp> {
                       style: TextStyle(fontSize: 18),
                     ),
                   ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(10)),
+                  margin: EdgeInsets.only(top: 30),
+                  child: Padding(
+                      padding: EdgeInsets.all(15),
+                      child: Column(children: [
+                        Text(
+                          "HOW TO USE",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        Text(
+                            """1. Make sure the app gets permission to notifications\n2. Set webhook url\n3. Click save\n4. Make sure the response is successful\n5. Force close the app\n6. Open again the app""",
+                            style: TextStyle(color: Colors.white))
+                      ])),
                 )
               ],
             ),
