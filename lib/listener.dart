@@ -23,16 +23,16 @@ MyHttpOverrides _httpOverrid = MyHttpOverrides();
 
 @pragma('vm:entry-point')
 void onData(NotificationEvent event) async {
-  HttpOverrides.global = _httpOverrid;
-  var storage = getStorage();
-  var payload = {
-    'message': event.message,
-    'title': event.title,
-    'packageName': event.packageName,
-    'timestamp': event.timeStamp.toString(),
-  };
-
   try {
+    HttpOverrides.global = _httpOverrid;
+    var storage = getStorage();
+    var payload = {
+      'message': event.message,
+      'title': event.title,
+      'packageName': event.packageName,
+      'timestamp': event.timeStamp.toString(),
+    };
+
     var uri = Uri.parse(await storage.read(key: "webhook_url") ?? '');
     await http.post(uri,
         body: json.encode(payload),
